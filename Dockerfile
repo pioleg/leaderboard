@@ -12,4 +12,4 @@ RUN chmod +x /app/pocketbase
 
 EXPOSE 8090
 
-CMD ["/app/pocketbase", "serve", "--http", "0.0.0.0:${PORT:-8090}"]
+CMD ["/app/pocketbase", "serve", "--http", "0.0.0.0:${PORT:8090}"]
