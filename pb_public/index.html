@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaderboard</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { cursor: pointer; background: #eee; }
+  </style>
+</head>
+<body>
+
+<h2>Race Leaderboard</h2>
+
+<select id="filter">
+  <option value="">All</option>
+</select>
+
+<table>
+  <thead>
+    <tr>
+      <th onclick="sort('player')">Player</th>
+      <th onclick="sort('track')">Track</th>
+      <th onclick="sort('car')">Car</th>
+      <th onclick="sort('time_ms')">Time (ms)</th>
+    </tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<script>
+let currentSort = "time_ms";
+
+async function load() {
+  const res = await fetch(`/api/collections/times/records?sort=${currentSort}`);
+  const data = await res.json();
+
+  const rows = document.getElementById("rows");
+  rows.innerHTML = "";
+
+  data.items.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.player}</td>
+      <td>${r.track}</td>
+      <td>${r.car}</td>
+      <td>${r.time_ms}</td>
+    `;
+    rows.appendChild(tr);
+  });
+}
+
+function sort(field) {
+  currentSort = field;
+  load();
+}
+
+load();
+setInterval(load, 3000); // simple realtime refresh
+</script>
+
+</body>
+</html>
